@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Yönetimi - Luxurider.com</title>
+    <link rel="stylesheet" href="style.css"> 
+    <style>
+        /* Profil Sayfası Özel Stilleri */
+        
+        .profile-container {
+            display: flex;
+            padding: 50px 80px;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Sol Menü */
+        .profile-sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            background-color: var(--dark-bg);
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            height: fit-content;
+        }
+
+        .profile-sidebar button {
+            display: block;
+            width: 100%;
+            padding: 15px 20px;
+            text-align: left;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #333;
+            color: var(--light-text);
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .profile-sidebar button:last-child {
+            border-bottom: none;
+        }
+
+        .profile-sidebar button:hover, .profile-sidebar button.active {
+            background-color: #333;
+            color: var(--secondary-color);
+        }
+        
+        /* Sağ İçerik Alanı */
+        .profile-content {
+            flex-grow: 1;
+            background-color: var(--dark-bg);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .profile-content h2 {
+            color: var(--primary-color);
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+        
+        /* Bölüm Gizleme */
+        .profile-section {
+            display: none;
+        }
+        
+        .profile-section.active {
+            display: block;
+        }
+        
+        /* Sağlayıcı Araç Yönetimi Stilleri */
+        .car-management-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .car-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .car-item {
+            background-color: #1a1a1a;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 5px solid var(--secondary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .car-info h4 {
+            margin: 0;
+            color: #fff;
+        }
+        .car-info p {
+            margin: 5px 0 0;
+            font-size: 14px;
+            color: var(--light-text);
+        }
+        
+        .car-actions button {
+            background-color: #555;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .car-actions .btn-edit {
+            background-color: var(--primary-color);
+            color: var(--dark-bg);
+        }
+        .car-actions .btn-edit:hover {
+            background-color: var(--secondary-color);
+        }
+        .car-actions .btn-delete:hover {
+            background-color: #c0392b;
+        }
+
+        /* Yeni Araç Ekleme Formu */
+        #arac-ekle-form .form-group label {
+            width: auto;
+        }
+        .form-section-title {
+            color: var(--secondary-color);
+            margin-top: 20px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #333;
+            padding-bottom: 5px;
+        }
+        
+        /* Müşteri ve Sağlayıcı Rozet Gösterimi */
+        .rozet-gosterim {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .rozet {
+            background-color: #3e3e3e;
+            color: var(--secondary-color);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .rozet.verified {
+            background-color: #006400; /* Koyu Yeşil */
+            color: #fff;
+        }
+        .rozet.premium {
+            background-color: var(--secondary-color);
+            color: var(--dark-bg);
+        }
+        
+        /* Acil İletişim Uyarısı */
+        .emergency-warning {
+            background-color: #333;
+            color: #ff6347;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            margin-top: 15px;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo" onclick="location.href='index.html'">LUXURIDER</div>
+        <nav class="nav">
+            <a href="arac_listesi.html">Filoyu Keşfet</a>
+            <a href="#">Nasıl Çalışır?</a>
+            <a href="#">İletişim</a>
+        </nav>
+        <div class="cta-buttons">
+             <button onclick="location.href='talep_yonetimi.html'" style="background-color: #b8860b; color: #1a1a1a; border: none;">TALEP YÖNETİMİ</button>
+            <button onclick="logout()">Çıkış Yap</button>
+        </div>
+    </div>
+    
+    <div class="profile-container">
+        
+        <div class="profile-sidebar">
+            <button class="active" onclick="showProfileSection('genel-bilgiler', this)">Genel Bilgiler</button>
+            <button onclick="location.href='talep_yonetimi.html'">Talep/Mesajlaşma</button> 
+            <button onclick="showProfileSection('guncel-sifre', this)">Şifre Güncelleme</button>
+            <button id="musteri-menusu" onclick="showProfileSection('abonelik-bilgileri', this)">Abonelik Bilgileri</button>
+            <button id="saglayici-menusu" onclick="showProfileSection('arac-yonetimi', this)">Araç Yönetimi</button>
+            <button onclick="showProfileSection('gecmis-talepler', this)">Geçmiş Talep/Kiralama</button>
+        </div>
+
+        <div class="profile-content">
+            
+            <div id="genel-bilgiler" class="profile-section active">
+                <h2>Hesap ve Rozet Bilgileriniz</h2>
+                
+                <div class="rozet-gosterim">
+                    <span class="rozet verified">✔ Doğrulanmış Kullanıcı</span>
+                    <span class="rozet premium" id="ozel-rozet"></span> 
+                </div>
+
+                <form class="form-box" style="padding: 20px;">
+                    <div class="form-group">
+                        <label for="p_ad_soyad">Ad Soyad / Firma Adı</label>
+                        <input type="text" id="p_ad_soyad" value="Müşteri/Firma Adı" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="p_email">E-posta</label>
+                        <input type="email" id="p_email" value="ornek@luxurider.com" disabled>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="p_telefon">Acil Durum Telefonu (Platform dışı paylaşılmaz)</label>
+                        <input type="text" id="p_telefon" value="555 123 45 67" required>
+                        <div class="emergency-warning">⚠️ Müşteri ve Sağlayıcıların direkt iletişim kurması kesinlikle yasaktır. Tüm iletişim **Talep Yönetimi** üzerinden yapılmalıdır.</div>
+                    </div>
+                    
+                    <button type="submit" class="submit-button" style="margin-top: 10px;">Bilgileri Güncelle</button>
+                </form>
+            </div>
+            
+            <div id="guncel-sifre" class="profile-section">
+                <h2>Şifre Güncelleme</h2>
+                <form class="form-box" style="padding: 20px;">
+                    <div class="form-group">
+                        <label for="current_password">Mevcut Şifre</label>
+                        <input type="password" id="current_password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="new_password">Yeni Şifre</label>
+                        <input type="password" id="new_password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm_password">Yeni Şifre (Tekrar)</label>
+                        <input type="password" id="confirm_password" required>
+                    </div>
+                    
+                    <button type="submit" class="submit-button" style="margin-top: 10px;">Şifreyi Değiştir</button>
+                </form>
+            </div>
+            
+            <div id="abonelik-bilgileri" class="profile-section">
+                <h2>Abonelik ve Ödeme Bilgileri</h2>
+                <div class="form-box" style="padding: 20px;">
+                    <p style="color:var(--secondary-color); font-size: 1.1em;">Aktif Üyelik: **Güvenilir Kiracı** (Aylık 50 TL)</p>
+                    <p>Son Ödeme Tarihi: <strong>15 Ekim 2025</strong></p>
+                    <p>Sonraki Ödeme Tarihi: <strong>15 Kasım 2025</strong></p>
+                    
+                    <button class="submit-button" style="background-color: #2980b9; margin-top: 20px;">Ödeme Yöntemi Güncelle</button>
+                    <button class="submit-button" style="background-color: #c0392b;">Aboneliği İptal Et</button>
+                </div>
+            </div>
+            
+            <div id="arac-yonetimi" class="profile-section">
+                <h2>Araç Yönetimi ve Onay Durumu</h2>
+                
+                <div class="car-management-header">
+                    <h3>Filomdaki Araçlar (2)</h3>
+                    <button class="request-button" onclick="showNewCarForm()">+ Yeni Araç Ekle</button>
+                </div>
+                
+                <div class="car-list">
+                    <div class="car-item">
+                        <div class="car-info">
+                            <h4>Mercedes S-Class (W223)</h4>
+                            <p>Plaka: 34 LUX 01 | Durum: <span style="color: limegreen;">AKTİF</span> | Fiyat: 1500 TL/Saat</p>
+                        </div>
+                        <div class="car-actions">
+                            <button class="btn-edit">Düzenle</button>
+                            <button class="btn-delete">Sil</button>
+                        </div>
+                    </div>
+                    <div class="car-item">
+                        <div class="car-info">
+                            <h4>BMW 7 Serisi</h4>
+                            <p>Plaka: 06 VIP 07 | Durum: <span style="color: orange;">ONAY BEKLİYOR</span> | Fiyat: 1350 TL/Saat</p>
+                        </div>
+                        <div class="car-actions">
+                            <button class="btn-edit">Düzenle</button>
+                            <button class="btn-delete">Sil</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="yeni-arac-formu" class="form-box hidden" style="margin-top: 40px;">
+                    <h3 style="color:var(--secondary-color); text-align: center;">Yeni Araç Bilgileri ve Resimleri</h3>
+                    <form id="arac-ekle-form">
+                        
+                        <div class="form-section-title">Temel Araç Bilgileri</div>
+                        <div class="form-group">
+                            <label for="arac_model">Marka ve Model</label>
+                            <input type="text" id="arac_model" required placeholder="Örn: Mercedes Vito VIP, BMW 7 Serisi">
+                        </div>
+                        <div class="form-group">
+                            <label for="arac_plaka">Plaka</label>
+                            <input type="text" id="arac_plaka" required placeholder="34 XXX 00">
+                        </div>
+                        <div class="form-group">
+                            <label for="arac_yil">Model Yılı</label>
+                            <input type="number" id="arac_yil" min="2015" max="2025" required placeholder="2022">
+                        </div>
+                        <div class="form-group">
+                            <label for="kapasite">Yolcu Kapasitesi</label>
+                            <input type="number" id="kapasite" min="1" max="15" required placeholder="4">
+                        </div>
+                        
+                        <div class="form-section-title">Fiyatlandırma (Saatlik/Günlük)</div>
+                        <div class="form-group">
+                            <label for="saatlik_fiyat">Saatlik Fiyat (Net Kazanç)</label>
+                            <input type="number" id="saatlik_fiyat" required placeholder="TL (Komisyon hariç fiyat)">
+                        </div>
+                        <div class="form-group">
+                            <label for="gunluk_fiyat">Günlük Fiyat (Opsiyonel)</label>
+                            <input type="number" id="gunluk_fiyat" placeholder="TL (24 saatlik kiralama)">
+                        </div>
+                        
+                        <div class="form-section-title">Resim ve Özellikler</div>
+                        <div class="form-group">
+                            <label for="arac_resimler">Araç Resimleri (Min. 5 Adet - Dış, İç, Bagaj)</label>
+                            <input type="file" id="arac_resimler" accept="image/*" multiple required>
+                            <small style="color:#888;">En az 5 yüksek çözünürlüklü resim yükleyiniz.</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="ozellikler">VIP Özellikler (Virgülle Ayırın)</label>
+                            <input type="text" id="ozellikler" placeholder="Wi-Fi, Mini Bar, TV, Deri Koltuk">
+                        </div>
+
+                        <button type="submit" class="submit-button">Aracı Onaya Gönder</button>
+                    </form>
+                </div>
+                
+            </div>
+            
+            <div id="gecmis-talepler" class="profile-section">
+                <h2>Geçmiş Kiralama/Hizmet Talepleriniz</h2>
+                <div class="form-box" style="padding: 20px;">
+                    <p style="color:#aaa;">Bu bölümde, yaptığınız kiralamaların (Müşteri) veya sunduğunuz hizmetlerin (Sağlayıcı) detaylı dökümü yer alacaktır.</p>
+                    <ul>
+                        <li style="color: var(--light-text); margin-bottom: 10px;">15.10.2025: S-Class ile Havalimanı Transferi - Tamamlandı (Puanınız: 5.0)</li>
+                        <li style="color: var(--light-text);">01.10.2025: Bodrum Gezisi (VIP Van) - İptal Edildi</li>
+                    </ul>
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+
+    <div class="footer">
+        &copy; 2025 LUXURIDER. Tüm Hakları Saklıdır. | <a href="#">Gizlilik Politikası</a> | <a href="#">Şartlar ve Koşullar</a>
+    </div>
+
+<script>
+    // Kullanıcı Tipini Simülasyon
+    const currentUserType = 'saglayici'; // 'musteri' veya 'saglayici' olarak değiştirilebilir
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        setupProfile(currentUserType);
+        const defaultButton = document.querySelector('.profile-sidebar button.active');
+        if(defaultButton) {
+            showProfileSection('genel-bilgiler', defaultButton);
+        }
+    });
+
+    function setupProfile(userType) {
+        const musteriMenu = document.getElementById('musteri-menusu');
+        const saglayiciMenu = document.getElementById('saglayici-menusu');
+        const ozelRozet = document.getElementById('ozel-rozet');
+
+        if (userType === 'musteri') {
+            saglayiciMenu.style.display = 'none';
+            musteriMenu.style.display = 'block';
+            ozelRozet.textContent = '⭐ Güvenilir Kiracı';
+            ozelRozet.classList.add('premium');
+        } else if (userType === 'saglayici') {
+            musteriMenu.style.display = 'none';
+            saglayiciMenu.style.display = 'block';
+            ozelRozet.textContent = '👑 Premium Sağlayıcı';
+            ozelRozet.classList.add('premium');
+        }
+    }
+
+    function showProfileSection(sectionId, clickedButton) {
+        // Tüm içerik bölümlerini ve menü butonlarını yönet
+        document.querySelectorAll('.profile-section').forEach(section => {
+            section.classList.remove('active');
+        });
+
+        document.querySelectorAll('.profile-sidebar button').forEach(button => {
+             // Sadece menü içindeki butonların aktifliğini kaldır, yan menüdeki linkin değil
+            if (button.getAttribute('onclick') && button.getAttribute('onclick').includes('showProfileSection')) {
+                button.classList.remove('active');
+            }
+        });
+
+        document.getElementById(sectionId).classList.add('active');
+        if (clickedButton) {
+            clickedButton.classList.add('active');
+        }
+        
+        if (sectionId === 'arac-yonetimi') {
+            document.getElementById('yeni-arac-formu').classList.add('hidden');
+        }
+    }
+    
+    function showNewCarForm() {
+        document.getElementById('yeni-arac-formu').classList.remove('hidden');
+        window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+
+    function logout() {
+        alert('Oturum kapatılıyor...');
+        window.location.href = 'giris.html';
+    }
+
+</script>
+
+</body>
+</html>

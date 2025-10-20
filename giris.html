@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giriş Yap - Luxurider.com</title>
+    <link rel="stylesheet" href="style.css"> 
+    <style>
+        /* Sadece bu sayfaya özel stil eklemeleri (gerekliyse) */
+        .form-box h2 {
+            margin-bottom: 10px;
+        }
+        .login-tip-secimi {
+            text-align: center;
+            margin-bottom: 30px;
+            color: var(--light-text);
+        }
+        .login-tip-secimi a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+        .login-tip-secimi a:hover {
+            color: var(--secondary-color);
+        }
+        
+        /* Butonlar için özel renkler, kullanıcı tipine göre yönlendirme yapmak için */
+        .login-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .login-buttons button {
+            flex: 1;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+        
+        .btn-musteri {
+            background-color: var(--primary-color);
+            color: var(--dark-bg);
+        }
+        .btn-musteri:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .btn-saglayici {
+            background-color: #3e3e3e;
+            color: #fff;
+        }
+        .btn-saglayici:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo" onclick="location.href='index.html'">LUXURIDER</div>
+        <nav class="nav">
+            <a href="arac_listesi.html">Filoyu Keşfet</a>
+            <a href="#">Nasıl Çalışır?</a>
+            <a href="#">İletişim</a>
+        </nav>
+        <div class="cta-buttons">
+            <button class="active-button" onclick="location.href='giris.html'">Üye Girişi</button>
+            <button onclick="location.href='saglayici_kayit.html'">Araç Sağlayıcı Ol</button>
+        </div>
+    </div>
+    
+    <div class="main-content-area">
+        <div class="form-box">
+            <h2>Platforma Giriş Yapın</h2>
+            <p style="text-align:center; color:var(--light-text); margin-bottom: 30px;">Lütfen hesabınıza ait bilgileri giriniz.</p>
+            
+            <form id="girisFormu">
+                
+                <div class="form-group">
+                    <label for="email">E-posta Adresi</label>
+                    <input type="email" id="email" required placeholder="ornek@mail.com">
+                </div>
+                <div class="form-group">
+                    <label for="sifre">Şifre</label>
+                    <input type="password" id="sifre" required>
+                </div>
+
+                <div class="login-buttons">
+                    <button type="submit" class="btn-musteri" onclick="alert('Müşteri Girişi yapılıyor...')">MÜŞTERİ OLARAK GİRİŞ</button>
+                    <button type="submit" class="btn-saglayici" onclick="alert('Araç Sağlayıcı Girişi yapılıyor...')">SAĞLAYICI OLARAK GİRİŞ</button>
+                </div>
+                
+                <p style="text-align:center; margin-top:20px;">
+                    <a href="#" style="color:#aaa; text-decoration: none;">Şifremi Unuttum</a>
+                </p>
+                
+                <div class="login-tip-secimi" style="margin-top: 40px;">
+                    <p>Hesabınız yok mu?</p>
+                    <a href="musteri_kayit.html">Hemen Müşteri Olun (Aylık 50 TL)</a> | 
+                    <a href="saglayici_kayit.html">Hemen Araç Sağlayıcı Olun (Belge Yükle)</a>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        &copy; 2025 LUXURIDER. Tüm Hakları Saklıdır. | <a href="#">Gizlilik Politikası</a> | <a href="#">Şartlar ve Koşullar</a>
+    </div>
+
+</body>
+</html>

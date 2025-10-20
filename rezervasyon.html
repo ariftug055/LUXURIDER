@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hizmet Talep Et - Luxurider.com</title>
+    <link rel="stylesheet" href="style.css"> 
+    <style>
+        /* Rezervasyon Sayfası Özel Stilleri */
+        
+        .reservation-container {
+            padding: 50px 80px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .step-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .step-indicator::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 5%;
+            right: 5%;
+            height: 2px;
+            background: #333;
+            transform: translateY(-50%);
+            z-index: 1;
+        }
+
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #333;
+            color: #fff;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            position: relative;
+            z-index: 2;
+            transition: background 0.3s;
+        }
+
+        .step.active {
+            background: var(--secondary-color);
+            color: var(--dark-bg);
+        }
+        
+        .step.completed {
+            background: var(--primary-color);
+            color: var(--dark-bg);
+        }
+
+        .step-label {
+            position: absolute;
+            top: 40px;
+            width: 150px;
+            font-size: 14px;
+            color: var(--light-text);
+        }
+        
+        .step-label:nth-child(2) { left: -60px; } /* 1. Adım etiketi */
+        .step-label:nth-child(4) { left: calc(50% - 75px); text-align: center; } /* 2. Adım etiketi */
+        .step-label:nth-child(6) { right: -60px; text-align: right; } /* 3. Adım etiketi */
+
+
+        .step-content {
+            background-color: var(--dark-bg);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        /* Navigasyon Butonları */
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        .form-navigation button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-prev {
+            background-color: #555;
+            color: #fff;
+        }
+        .btn-prev:hover {
+            background-color: #777;
+        }
+        
+        .btn-next, .btn-submit {
+            background-color: var(--primary-color);
+            color: var(--dark-bg);
+        }
+        .btn-next:hover, .btn-submit:hover {
+            background-color: var(--secondary-color);
+        }
+
+        /* Özet Kartı Stilleri (Son Adım) */
+        .summary-card {
+            border: 1px solid var(--primary-color);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card h4 {
+            color: var(--secondary-color);
+            border-bottom: 1px dashed #333;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 16px;
+            color: var(--light-text);
+        }
+        
+        .summary-total {
+            border-top: 2px solid var(--secondary-color);
+            margin-top: 15px;
+            padding-top: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        /* Gizleme Sınıfı */
+        .hidden {
+            display: none;
+        }
+        
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo" onclick="location.href='index.html'">LUXURIDER</div>
+        <nav class="nav">
+            <a href="arac_listesi.html">Filoyu Keşfet</a>
+            <a href="#">Nasıl Çalışır?</a>
+            <a href="#">İletişim</a>
+        </nav>
+        <div class="cta-buttons">
+            <button onclick="location.href='giris.html'">Çıkış Yap</button>
+        </div>
+    </div>
+    
+    <div class="reservation-container">
+        
+        <h2 style="color:var(--secondary-color); text-align: center; margin-bottom: 40px;">Hizmet Talep Etme Sayfası</h2>
+
+        <div class="car-card" style="margin-bottom: 30px;">
+            <div class="card-content">
+                <h3 style="color:var(--primary-color);">Seçilen Araç: Mercedes S-Class (W223)</h3>
+                <p class="model-year">1.500 TL/Saat | Sağlayıcı: ABC Transfer (Doğrulanmış)</p>
+            </div>
+        </div>
+
+        <div class="step-indicator">
+            <div id="step-1-circle" class="step active">1</div>
+            <span class="step-label">Teslimat & İletişim</span>
+            
+            <div id="step-2-circle" class="step">2</div>
+            <span class="step-label" style="text-align: center;">Hizmet Detayları</span>
+            
+            <div id="step-3-circle" class="step">3</div>
+            <span class="step-label" style="text-align: right;">Özet & Onay</span>
+        </div>
+
+        <form id="reservationForm">
+            
+            <div id="step-1" class="step-content">
+                <h3>Adım 1: Teslim Alma Konumu ve İletişim</h3>
+                <p style="color:#aaa;">Aracın ve şoförün size ulaşacağı adresi eksiksiz giriniz.</p>
+
+                <div class="form-group">
+                    <label for="pickup_address">Teslim Alma Adresi/Konumu</label>
+                    <input type="text" id="pickup_address" required placeholder="Örn: İstanbul Havalimanı (Dış Hatlar Çıkışı), Otel Adı, Açık Adres">
+                </div>
+                <div class="form-group">
+                    <label for="dropoff_address">Bırakma Adresi/Konumu (Opsiyonel)</label>
+                    <input type="text" id="dropoff_address" placeholder="Tek yön değilse belirtiniz.">
+                </div>
+                <div class="form-group">
+                    <label for="contact_name">Görüşülecek Kişi Adı</label>
+                    <input type="text" id="contact_name" required placeholder="Görüşeceğiniz kişinin adı (Sanatçı veya asistan)">
+                </div>
+                <div class="form-group">
+                    <label for="contact_phone">Acil Durum Telefonu</label>
+                    <input type="text" id="contact_phone" required placeholder="5XX XXX XX XX">
+                </div>
+
+                <div class="form-navigation">
+                    <button type="button" class="btn-prev hidden">Geri</button>
+                    <button type="button" class="btn-next" onclick="nextStep(2)">İleri</button>
+                </div>
+            </div>
+
+            <div id="step-2" class="step-content hidden">
+                <h3>Adım 2: Tarih, Saat ve Süre Bilgileri</h3>
+                
+                <div class="form-group">
+                    <label for="start_date">Başlangıç Tarihi</label>
+                    <input type="date" id="start_date" required>
+                </div>
+                <div class="form-group">
+                    <label for="start_time">Başlangıç Saati</label>
+                    <input type="time" id="start_time" required>
+                </div>
+                <div class="form-group">
+                    <label for="service_duration">Hizmet Süresi (Saat)</label>
+                    <input type="number" id="service_duration" min="1" required placeholder="En az 1 saat">
+                </div>
+                <div class="form-group">
+                    <label for="notes">Ek Notlar/Talepler (Örn: Dil bilen şoför, bebek koltuğu, özel güzergah)</label>
+                    <textarea id="notes" rows="4" style="width: 100%; padding: 10px; border-radius: 5px; background-color: #2a2a2a; color:#fff; border: 1px solid #333;"></textarea>
+                </div>
+
+                <div class="form-navigation">
+                    <button type="button" class="btn-prev" onclick="nextStep(1)">Geri</button>
+                    <button type="button" class="btn-next" onclick="nextStep(3)">Özeti Gör</button>
+                </div>
+            </div>
+
+            <div id="step-3" class="step-content hidden">
+                <h3>Adım 3: Rezervasyon Özeti ve Onay</h3>
+                
+                <div class="summary-card">
+                    <h4>Kiralama Detayları</h4>
+                    <div class="summary-item"><span>Araç/Model:</span> <span id="summary-car">Mercedes S-Class (W223)</span></div>
+                    <div class="summary-item"><span>Başlangıç Konumu:</span> <span id="summary-pickup"></span></div>
+                    <div class="summary-item"><span>Tarih/Saat:</span> <span id="summary-datetime"></span></div>
+                    <div class="summary-item"><span>Süre:</span> <span id="summary-duration"></span></div>
+                    <div class="summary-item"><span>Saatlik Fiyat:</span> <span>1.500 TL</span></div>
+                </div>
+
+                <div class="summary-card">
+                    <h4>Ücret Hesaplama (Tahmini)</h4>
+                    <div class="summary-item"><span>Kiralama Toplam (3 Saat x 1500 TL):</span> <span>4.500 TL</span></div>
+                    <div class="summary-item"><span>Hizmet Bedeli (Müşteri Aidatı Hariç):</span> <span>0 TL</span></div>
+                    <div class="summary-total"><span>TALEP EDİLEN TOPLAM FİYAT:</span> <span id="summary-total-price">4.500 TL</span></div>
+                    <p style="font-size: 12px; color: var(--primary-color); text-align: right; margin-top: 5px;">* Bu fiyat, araç sahibi tarafından onaylanacaktır.</p>
+                </div>
+                
+                <p style="text-align:center; color: #ff6347;"><strong>Önemli:</strong> Bu bir ödeme değildir. Talebiniz araç sahibine iletilir ve onaylandıktan sonra ödeme adımı başlar.</p>
+
+                <div class="form-navigation">
+                    <button type="button" class="btn-prev" onclick="nextStep(2)">Geri</button>
+                    <button type="submit" class="btn-submit">Talep Oluştur ve Onaya Gönder</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div class="footer">
+        &copy; 2025 LUXURIDER. Tüm Hakları Saklıdır. | <a href="#">Gizlilik Politikası</a> | <a href="#">Şartlar ve Koşullar</a>
+    </div>
+
+<script>
+    let currentStep = 1;
+    
+    // Adım değiştirme fonksiyonu
+    function nextStep(stepNumber) {
+        // Form alanlarının kontrolünü burada yapabilirsiniz (şimdilik atlandı)
+        
+        // Özet adımına geçiliyorsa bilgileri güncelle
+        if (stepNumber === 3) {
+            updateSummary();
+        }
+
+        // Tüm adımları gizle
+        document.querySelectorAll('.step-content').forEach(content => {
+            content.classList.add('hidden');
+        });
+        
+        // İstenen adımı göster
+        document.getElementById(`step-${stepNumber}`).classList.remove('hidden');
+        
+        // Adım göstergelerini güncelle
+        document.querySelectorAll('.step').forEach(circle => {
+            const circleStep = parseInt(circle.textContent);
+            circle.classList.remove('active', 'completed');
+            
+            if (circleStep === stepNumber) {
+                circle.classList.add('active');
+            } else if (circleStep < stepNumber) {
+                circle.classList.add('completed');
+            }
+        });
+
+        currentStep = stepNumber;
+        window.scrollTo({ top: 0, behavior: 'smooth' }); // Sayfayı üste kaydır
+    }
+    
+    // Özet bilgilerini güncelleme fonksiyonu
+    function updateSummary() {
+        // Adım 1 verileri
+        const pickup = document.getElementById('pickup_address').value || 'Belirtilmedi';
+        
+        // Adım 2 verileri
+        const startDate = document.getElementById('start_date').value;
+        const startTime = document.getElementById('start_time').value;
+        const duration = document.getElementById('service_duration').value;
+        
+        const datetimeStr = (startDate && startTime) ? `${startDate} / ${startTime}` : 'Belirtilmedi';
+        const durationStr = duration ? `${duration} Saat` : 'Belirtilmedi';
+        
+        // Fiyat Hesaplama Simülasyonu
+        const hourlyRate = 1500; // Örnek S-Class Fiyatı
+        const total = duration * hourlyRate;
+        
+        // Özet alanlarını doldur
+        document.getElementById('summary-pickup').textContent = pickup;
+        document.getElementById('summary-datetime').textContent = datetimeStr;
+        document.getElementById('summary-duration').textContent = durationStr;
+        
+        document.getElementById('summary-total-price').textContent = `${total.toLocaleString('tr-TR')} TL`;
+        
+        // Ücret hesaplama detayını güncelle
+        const summaryTotalItem = document.querySelector('.summary-card:nth-child(2) .summary-item:nth-child(1) span:nth-child(2)');
+        summaryTotalItem.textContent = `${total.toLocaleString('tr-TR')} TL`;
+        document.querySelector('.summary-card:nth-child(2) .summary-item:nth-child(1) span:nth-child(1)').textContent = `Kiralama Toplam (${duration || 0} Saat x ${hourlyRate} TL):`;
+    }
+    
+    // Formun gönderilmesi
+    document.getElementById('reservationForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        alert('Rezervasyon talebiniz Araç Sağlayıcısına iletilmiştir. Kısa süre içinde onay için tarafınıza dönüş yapılacaktır. Teşekkür ederiz!');
+        // Gerçek uygulamada AJAX ile talep gönderme işlemi buraya gelir
+        window.location.href = 'profil.html?tab=gecmis-talepler'; // Profildeki geçmiş taleplere yönlendir
+    });
+
+</script>
+
+</body>
+</html>

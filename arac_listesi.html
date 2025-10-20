@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP Filoyu Keşfet - Luxurider.com</title>
+    <link rel="stylesheet" href="style.css"> 
+    <style>
+        /* Araç Listesi Sayfası Özel Stilleri */
+
+        /* Arama ve Filtreleme Alanı */
+        .search-area {
+            background-color: var(--light-bg); /* Aydınlık arka plan */
+            padding: 20px 80px;
+            border-bottom: 1px solid #eee; /* Açık renkli çizgi */
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .search-area input, .search-area select, .search-area button {
+            padding: 10px; /* Daha kompakt */
+            border: 1px solid #ddd; /* Açık renkli çerçeve */
+            background-color: #fff; /* Beyaz input arka planı */
+            color: var(--text-color); /* Koyu yazı rengi */
+            border-radius: 5px;
+            font-size: 15px;
+        }
+        
+        .search-area input[type="text"] {
+            flex-grow: 2;
+        }
+        
+        .search-area input[type="date"],
+        .search-area input[type="time"] {
+             flex-grow: 1;
+             min-width: 120px; /* Tarih/saat kutularının daralmasını önle */
+        }
+
+        .search-area button {
+            background-color: var(--primary-color);
+            color: var(--secondary-color); /* Altın rengi yazı */
+            border: none;
+            padding: 10px 20px; /* Daha kompakt buton */
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-area button:hover {
+            background-color: #333; /* Koyu hover */
+        }
+
+        /* Ana İçerik ve Sonuçlar */
+        .listing-container {
+            display: flex;
+            padding: 30px 80px; /* Daha az padding */
+            gap: 25px; /* Daha kompakt boşluk */
+        }
+
+        /* Sol Taraftaki Filtreler */
+        .sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            background-color: var(--light-bg); /* Beyaz arka plan */
+            padding: 20px;
+            border-radius: 8px; /* Daha az radius */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.08); /* Daha hafif gölge */
+            height: fit-content;
+        }
+        
+        .sidebar h3 {
+            color: var(--primary-color); /* Koyu başlık */
+            border-bottom: 1px solid #eee; /* Açık çizgi */
+            padding-bottom: 10px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .filter-group {
+            margin-bottom: 20px;
+        }
+
+        .filter-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-color);
+            font-size: 15px;
+        }
+        
+        .filter-group select {
+            width: 100%;
+            border-color: #ddd;
+            background-color: #fff;
+            color: var(--text-color);
+        }
+
+        .checkbox-group {
+            margin-bottom: 6px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 8px;
+            accent-color: var(--secondary-color); /* Altın rengi onay kutusu */
+        }
+        
+        .checkbox-group label {
+            font-weight: normal; /* Daha hafif yazı */
+            color: #555;
+            font-size: 14px;
+        }
+
+        /* Sağ Taraftaki Araç Kartları */
+        .results-list {
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Daha küçük kart genişliği */
+            gap: 20px; /* Daha kompakt boşluk */
+        }
+
+        .car-card {
+            background-color: var(--light-bg); /* Beyaz arka plan */
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s;
+            border: 1px solid #eee; /* Hafif çerçeve */
+        }
+
+        .car-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .car-image {
+            height: 160px; /* Daha küçük görsel yüksekliği */
+            background: url('https://picsum.photos/300/160?car') no-repeat center center/cover; /* Placeholder boyutuna uygun */
+            position: relative;
+        }
+        
+        .car-image.car-1 { background-image: url('https://picsum.photos/300/160?mercedes-s-class'); }
+        .car-image.car-2 { background-image: url('https://picsum.photos/300/160?mercedes-vito'); }
+        .car-image.car-3 { background-image: url('https://picsum.photos/300/160?bmw-7-series'); }
+
+
+        .car-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--secondary-color); /* Altın rengi rozet */
+            color: var(--primary-color);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 11px;
+        }
+
+        .card-content {
+            padding: 15px; /* Daha az padding */
+        }
+
+        .card-content h3 {
+            color: var(--primary-color);
+            margin: 0 0 5px 0;
+            font-size: 20px; /* Daha küçük başlık */
+        }
+
+        .card-content .model-year {
+            color: #777; /* Daha nötr renk */
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
+
+        .details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: #777;
+        }
+
+        .details span strong {
+            color: var(--primary-color); /* Koyu vurgu */
+            margin-right: 3px;
+        }
+        
+        .supplier-badge {
+            display: inline-block;
+            background-color: #e0e0e0; /* Açık gri arka plan */
+            color: #555;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            margin-top: 5px;
+        }
+        
+        .supplier-badge.verified {
+            background-color: #d4edda; /* Açık yeşil */
+            color: #155724; /* Koyu yeşil yazı */
+        }
+        .supplier-badge.premium {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+
+        .price-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #eee; /* Açık çizgi */
+            padding-top: 12px;
+            margin-top: 10px;
+        }
+
+        .price-area .price {
+            font-size: 24px; /* Daha küçük fiyat */
+            font-weight: bold;
+            color: var(--primary-color); /* Koyu fiyat */
+        }
+        
+        .price-area .price small {
+            font-size: 12px;
+            color: #777;
+            font-weight: normal;
+        }
+
+        .request-button {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 8px 15px; /* Daha kompakt buton */
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 13px;
+        }
+        
+        .request-button:hover {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+        }
+        
+        /* RESPONSIVE AYARLAMALAR (arac_listesi özel) */
+        @media (max-width: 1024px) {
+            .search-area {
+                padding: 15px 20px;
+                gap: 10px;
+            }
+            .listing-container {
+                flex-direction: column;
+                padding: 20px;
+                gap: 20px;
+            }
+            .sidebar {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            .results-list {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Mobil için daha da küçült */
+            }
+            .car-image {
+                height: 140px; /* Mobil için görsel yüksekliği */
+            }
+            .car-card {
+                margin: 0 auto; /* Kartları ortala */
+                max-width: 350px;
+            }
+        }
+        @media (max-width: 600px) {
+            .search-area {
+                flex-wrap: wrap;
+            }
+            .search-area input, .search-area select, .search-area button {
+                flex: 1 1 100%;
+                margin-bottom: 5px;
+            }
+            .search-area button {
+                margin-top: 10px;
+            }
+            .listing-container {
+                padding: 15px;
+            }
+            .car-card {
+                 max-width: 100%;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo" onclick="location.href='index.html'">LUXURIDER</div>
+        <nav class="nav">
+            <a href="arac_listesi.html" class="active">Filoyu Keşfet</a>
+            <a href="#">Nasıl Çalışır?</a>
+            <a href="#">İletişim</a>
+        </nav>
+        <div class="cta-buttons">
+            <button onclick="location.href='giris.html'">Üye Girişi</button>
+            <button onclick="location.href='saglayici_kayit.html'">Araç Sağlayıcı Ol</button>
+        </div>
+    </div>
+    
+    <div class="search-area">
+        <input type="text" placeholder="Hizmet Başlangıç Konumunuzu Girin (Örn: Sabiha Gökçen Havalimanı)">
+        <input type="date" title="Hizmet Başlangıç Tarihi">
+        <input type="time" title="Hizmet Başlangıç Saati" value="10:00">
+        <button>Yeniden Ara</button>
+    </div>
+
+    <div class="listing-container">
+        
+        <div class="sidebar">
+            <h3>Filtreler</h3>
+            
+            <div class="filter-group">
+                <label for="car-type">Araç Tipi</label>
+                <select id="car-type">
+                    <option value="all">Tümü</option>
+                    <option value="sedan">Lüks Sedan (Makam)</option>
+                    <option value="van">VIP Van / Minibüs</option>
+                    <option value="suv">Premium SUV</option>
+                    <option value="classic">Özel / Klasik</option>
+                </select>
+            </div>
+            
+            <div class="filter-group">
+                <label>VIP Özellikler</label>
+                <div class="checkbox-group"><input type="checkbox" id="wifi"><label for="wifi">Wi-Fi</label></div>
+                <div class="checkbox-group"><input type="checkbox" id="minibar"><label for="minibar">Mini Bar</label></div>
+                <div class="checkbox-group"><input type="checkbox" id="tv"><label for="tv">Multimedya / TV</label></div>
+                <div class="checkbox-group"><input type="checkbox" id="leather"><label for="leather">Deri Koltuklar</label></div>
+            </div>
+            
+            <div class="filter-group">
+                <label for="capacity">Yolcu Kapasitesi (Min.)</label>
+                <input type="number" id="capacity" min="1" max="15" value="1">
+            </div>
+            
+            <div class="filter-group">
+                <label for="price-range">Saatlik Bütçe (Maks.)</label>
+                <input type="range" id="price-range" min="100" max="5000" value="5000" style="width: 100%;">
+                <p style="text-align: center; color:var(--primary-color); font-size: 13px; margin-top: 10px;">5000 TL+</p>
+            </div>
+            
+        </div>
+
+        <div class="results-list">
+            
+            <div class="car-card">
+                <div class="car-image car-1">
+                    <span class="car-badge">Şoförlü Transfer</span>
+                </div>
+                <div class="card-content">
+                    <h3>Mercedes S-Class (W223)</h3>
+                    <p class="model-year">2023 Model | Lüks Sedan</p>
+                    
+                    <div class="details">
+                        <span><strong>4</strong> Yolcu</span>
+                        <span><strong>2</strong> Büyük Bagaj</span>
+                        <span><strong>5.0</strong> Puan</span>
+                    </div>
+                    
+                    <p style="margin-top: -5px; font-size: 13px;">Sağlayıcı: ABC Transfer <span class="supplier-badge verified">✔️ Doğrulanmış</span></p>
+
+                    <div class="price-area">
+                        <div class="price">1.500 <small>TL / Saat</small></div>
+                        <button class="request-button">Hizmet Talep Et</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="car-card">
+                <div class="car-image car-2">
+                    <span class="car-badge">VIP Gezi Paketi</span>
+                </div>
+                <div class="card-content">
+                    <h3>Mercedes-Benz Vito (VIP Design)</h3>
+                    <p class="model-year">2024 Model | VIP Van</p>
+                    
+                    <div class="details">
+                        <span><strong>8</strong> Yolcu</span>
+                        <span><strong>6</strong> Büyük Bagaj</span>
+                        <span><strong>4.7</strong> Puan</span>
+                    </div>
+                    
+                    <p style="margin-top: -5px; font-size: 13px;">Sağlayıcı: Elite Filo <span class="supplier-badge premium">⭐ Premium Rozet</span></p>
+
+                    <div class="price-area">
+                        <div class="price">2.200 <small>TL / Saat</small></div>
+                        <button class="request-button">Hizmet Talep Et</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="car-card">
+                <div class="car-image car-3">
+                    <span class="car-badge">Havalimanı Transferi</span>
+                </div>
+                <div class="card-content">
+                    <h3>BMW 7 Serisi</h3>
+                    <p class="model-year">2022 Model | Lüks Sedan</p>
+                    
+                    <div class="details">
+                        <span><strong>4</strong> Yolcu</span>
+                        <span><strong>3</strong> Büyük Bagaj</span>
+                        <span><strong>4.9</strong> Puan</span>
+                    </div>
+                    
+                    <p style="margin-top: -5px; font-size: 13px;">Sağlayıcı: Jet Cars <span class="supplier-badge verified">✔️ Doğrulanmış</span></p>
+
+                    <div class="price-area">
+                        <div class="price">1.350 <small>TL / Saat</small></div>
+                        <button class="request-button">Hizmet Talep Et</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="car-card">
+                <div class="car-image" style="background-image: url('https://picsum.photos/300/160?audi-a8');">
+                    <span class="car-badge">Şoförlü Transfer</span>
+                </div>
+                <div class="card-content">
+                    <h3>Audi A8 L</h3>
+                    <p class="model-year">2023 Model | Lüks Sedan</p>
+                    
+                    <div class="details">
+                        <span><strong>4</strong> Yolcu</span>
+                        <span><strong>3</strong> Büyük Bagaj</span>
+                        <span><strong>4.8</strong> Puan</span>
+                    </div>
+                    
+                    <p style="margin-top: -5px; font-size: 13px;">Sağlayıcı: Premier Filo <span class="supplier-badge verified">✔️ Doğrulanmış</span></p>
+
+                    <div class="price-area">
+                        <div class="price">1.400 <small>TL / Saat</small></div>
+                        <button class="request-button">Hizmet Talep Et</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="car-card">
+                <div class="car-image" style="background-image: url('https://picsum.photos/300/160?rangeroversuv');">
+                    <span class="car-badge">Premium SUV</span>
+                </div>
+                <div class="card-content">
+                    <h3>Range Rover Vogue</h3>
+                    <p class="model-year">2024 Model | Premium SUV</p>
+                    
+                    <div class="details">
+                        <span><strong>4</strong> Yolcu</span>
+                        <span><strong>4</strong> Büyük Bagaj</span>
+                        <span><strong>4.9</strong> Puan</span>
+                    </div>
+                    
+                    <p style="margin-top: -5px; font-size: 13px;">Sağlayıcı: Lüks Araçlar A.Ş. <span class="supplier-badge premium">⭐ Premium Rozet</span></p>
+
+                    <div class="price-area">
+                        <div class="price">1.800 <small>TL / Saat</small></div>
+                        <button class="request-button">Hizmet Talep Et</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="car-card">
+                <div class="car-image" style="background-image: url('https://picsum.photos/300/160?sprinter-vip');">
+                    <span class="car-badge">Uzun Yol Özel</span>
+                </div>
+                <div class="card-content">
+                    <h3>Mercedes-Benz Sprinter (VIP)</h3>
+                    <p class="model-year">2023 Model | VIP Minibüs</p>
+                    
+                    <div class="details">
+                        <span><strong>10</strong> Yolcu</span>
+                        <span><strong>8</strong> Büyük Bagaj</span>
+                        <span><strong>4.6</strong> Puan</span>
+                    </div>
+                    
+                    <p style="margin-top: -5px; font-size: 13px;">Sağlayıcı: Konfor Turizm <span class="supplier-badge verified">✔️ Doğrulanmış</span></p>
+
+                    <div class="price-area">
+                        <div class="price">2.500 <small>TL / Saat</small></div>
+                        <button class="request-button">Hizmet Talep Et</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="footer">
+        &copy; 2025 LUXURIDER. Tüm Hakları Saklıdır. | <a href="#">Gizlilik Politikası</a> | <a href="#">Şartlar ve Koşullar</a>
+    </div>
+
+</body>
+</html>

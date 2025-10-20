@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Müşteri Üyeliği - Luxurider.com</title>
+    <link rel="stylesheet" href="style.css"> 
+    <style>
+        /* Sadece bu sayfaya özel stil eklemeleri (gerekliyse) */
+        .membership-info {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--secondary-color);
+        }
+        .membership-info p {
+            margin: 5px 0;
+            color: var(--light-text);
+        }
+        .membership-info strong {
+            color: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo" onclick="location.href='index.html'">LUXURIDER</div>
+        <nav class="nav">
+            <a href="arac_listesi.html">Filoyu Keşfet</a>
+            <a href="#">Nasıl Çalışır?</a>
+            <a href="#">İletişim</a>
+        </nav>
+        <div class="cta-buttons">
+            <button onclick="location.href='giris.html'">Üye Girişi</button>
+            <button onclick="location.href='saglayici_kayit.html'">Araç Sağlayıcı Ol</button>
+        </div>
+    </div>
+    
+    <div class="main-content-area">
+        <div class="form-box">
+            <h2>Luxurider Müşteri Üyeliği</h2>
+            <p style="text-align:center; color:var(--light-text); margin-bottom: 30px;">Premium hizmetlerimize ve doğrulanmış VIP filomuza erişim için üye olun.</p>
+            
+            <div class="membership-info">
+                <h3>Aylık Avantajlar</h3>
+                <p>Platformumuzda tüm müşteriler **Güvenilir Kiracı** statüsündedir.</p>
+                <p>Üyelik Ücreti: <strong style="font-size: 1.1em;">Aylık 50 TL</strong> (Kredi kartı/Banka kartı ile ödenir.)</p>
+                <p><strong>Avantajlar:</strong> Doğrudan VIP araç erişimi, güvenilir sağlayıcılardan hızlı onay.</p>
+            </div>
+            
+            <form id="musteriKayitFormu">
+                
+                <div class="form-header" style="color:var(--primary-color); font-size: 1.2em; border-left: 3px solid var(--secondary-color); padding-left: 10px; margin-bottom: 20px;">Hesap Bilgileri</div>
+                
+                <div class="form-group">
+                    <label for="ad_soyad">Adınız ve Soyadınız</label>
+                    <input type="text" id="ad_soyad" required placeholder="Ad Soyad">
+                </div>
+                <div class="form-group">
+                    <label for="telefon">Telefon Numarası</label>
+                    <input type="text" id="telefon" required placeholder="5XX XXX XX XX">
+                </div>
+                <div class="form-group">
+                    <label for="email">E-posta Adresi</label>
+                    <input type="email" id="email" required placeholder="ornek@mail.com">
+                </div>
+                <div class="form-group">
+                    <label for="sifre">Şifre Oluştur</label>
+                    <input type="password" id="sifre" required>
+                </div>
+
+                <p style="margin-top:40px; text-align:center; font-size:14px; color:var(--secondary-color);">
+                    Hesabınızı oluşturduktan sonra, üyeliğinizi aktif etmek için aylık 50 TL ödeme adımına yönlendirileceksiniz.
+                </p>
+
+                <button type="submit" class="submit-button">Üyeliği Oluştur ve Ödeme Adımına Geç</button>
+                
+                <p style="margin-top:20px; text-align:center; font-size:14px; color:#666;">Zaten hesabınız var mı? <a href="giris.html" style="color:var(--primary-color); text-decoration: none;">Giriş Yap</a></p>
+            </form>
+        </div>
+    </div>
+
+    <div class="footer">
+        &copy; 2025 LUXURIDER. Tüm Hakları Saklıdır. | <a href="#">Gizlilik Politikası</a> | <a href="#">Şartlar ve Koşullar</a>
+    </div>
+
+</body>
+</html>

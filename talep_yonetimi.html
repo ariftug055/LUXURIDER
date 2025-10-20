@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talep Yönetimi ve Mesajlaşma - Luxurider.com</title>
+    <link rel="stylesheet" href="style.css"> 
+    <style>
+        /* Talep Yönetimi Sayfası Stilleri */
+
+        .talep-container {
+            display: flex;
+            padding: 50px 80px;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Sol: Talep Listesi */
+        .talep-list-sidebar {
+            width: 350px;
+            flex-shrink: 0;
+            background-color: var(--light-bg); /* Beyaz arka plan */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+            overflow: hidden;
+            height: 700px; 
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ddd;
+        }
+        
+        .talep-list-sidebar h3 {
+            background-color: var(--primary-color); /* Koyu (Siyah) Başlık */
+            color: var(--secondary-color); /* Altın rengi yazı */
+            margin: 0;
+            padding: 15px 20px;
+            text-align: center;
+        }
+        
+        .talep-item-wrapper {
+            overflow-y: auto; 
+            flex-grow: 1;
+        }
+
+        .talep-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee; /* Açık renkli çizgi */
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .talep-item:hover, .talep-item.active {
+            background-color: #f0f0f0; /* Açık hover */
+        }
+
+        .talep-item h4 {
+            margin: 0 0 5px 0;
+            color: var(--primary-color); /* Koyu yazı */
+            font-size: 16px;
+        }
+
+        .talep-item p {
+            margin: 0;
+            font-size: 13px;
+            color: #777;
+        }
+        
+        .talep-item .status {
+            font-weight: bold;
+        }
+        .status.beklemede { color: orange; }
+        .status.onaylandi { color: green; }
+        .status.tamamlandi { color: #2980b9; }
+
+        /* Sağ: Talep Detay ve Mesajlaşma Alanı */
+        .talep-detail-area {
+            flex-grow: 1;
+            background-color: var(--light-bg); /* Beyaz arka plan */
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            border: 1px solid #ddd;
+        }
+        
+        .detail-header {
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .detail-header h2 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 20px;
+        }
+
+        /* Mesajlaşma Kutusu */
+        .chat-box {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 500px;
+            background-color: #f9f9f9; /* Hafif gölge */
+        }
+        
+        .message-bubble {
+            margin-bottom: 15px;
+            display: flex;
+        }
+        
+        .message-content {
+            padding: 10px 15px;
+            border-radius: 15px;
+            max-width: 70%;
+            position: relative;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-message {
+            justify-content: flex-end;
+        }
+        
+        .user-message .message-content {
+            background-color: var(--secondary-color); /* Altın rengi balon */
+            color: var(--primary-color); /* Koyu yazı */
+            border-bottom-right-radius: 0;
+        }
+
+        .other-message {
+            justify-content: flex-start;
+        }
+        
+        .other-message .message-content {
+            background-color: #fff; /* Beyaz balon */
+            color: var(--text-color);
+            border: 1px solid #eee;
+            border-bottom-left-radius: 0;
+        }
+        
+        .chat-input-area {
+            border-top: 1px solid #eee;
+            padding: 15px 20px;
+            display: flex;
+            gap: 10px;
+            background-color: var(--light-bg);
+        }
+        
+        .chat-input-area input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #fff;
+            color: var(--text-color);
+            border-radius: 5px;
+        }
+        
+        .chat-input-area button {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        /* Sağlayıcı için onay/red butonları */
+        .action-buttons {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #eee; /* Butonları ayır */
+        }
+        
+        .action-buttons button {
+            padding: 10px 25px;
+            margin: 0 10px;
+            font-size: 15px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-approve {
+            background-color: #2ecc71; /* Açık Yeşil */
+            color: #fff;
+        }
+        .btn-approve:hover {
+            background-color: #27ae60;
+        }
+        .btn-reject {
+            background-color: #e74c3c; /* Kırmızı */
+            color: #fff;
+        }
+        .btn-reject:hover {
+            background-color: #c0392b;
+        }
+        
+        /* RESPONSIVE AYARLAMALAR (talep_yonetimi özel) */
+        @media (max-width: 1024px) {
+            .talep-container {
+                flex-direction: column;
+                padding: 30px;
+                gap: 20px;
+            }
+            .talep-list-sidebar {
+                width: 100%;
+                height: 300px; 
+            }
+            .chat-box {
+                max-height: 400px;
+            }
+        }
+        @media (max-width: 600px) {
+            .talep-container {
+                padding: 15px;
+            }
+            .action-buttons {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .action-buttons button {
+                width: 100%;
+                margin: 0;
+            }
+            .chat-input-area {
+                padding: 10px 15px;
+            }
+            .chat-input-area button {
+                padding: 10px 15px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo" onclick="location.href='index.html'">LUXURIDER</div>
+        <nav class="nav">
+            <a href="arac_listesi.html">Filoyu Keşfet</a>
+            <a href="#">Nasıl Çalışır?</a>
+            <a href="#">İletişim</a>
+        </nav>
+        <div class="cta-buttons">
+            <button onclick="location.href='talep_yonetimi.html'" style="background-color: var(--secondary-color); color: var(--primary-color); border: none;">TALEP YÖNETİMİ</button>
+            <button onclick="location.href='profil.html'">Profilim</button>
+        </div>
+    </div>
+    
+    <div class="talep-container">
+        
+        <div class="talep-list-sidebar">
+            <h3>Talepleriniz (5 Yeni)</h3>
+            
+            <div class="talep-item-wrapper" id="talep-listesi">
+                <div class="talep-item active" data-id="1" onclick="selectTalep(this)">
+                    <h4>MERCEDES S-CLASS - Yeni Talep</h4>
+                    <p>Müşteri: A. Yılmaz | Tarih: 21.10.2025 | Durum: <span class="status beklemede">Beklemede</span></p>
+                </div>
+                 <div class="talep-item" data-id="2" onclick="selectTalep(this)">
+                    <h4>VIP VAN - Onaylandı</h4>
+                    <p>Müşteri: B. Kaya | Tarih: 01.11.2025 | Durum: <span class="status onaylandi">Onaylandı</span></p>
+                </div>
+                 <div class="talep-item" data-id="3" onclick="selectTalep(this)">
+                    <h4>BMW 7 SERİSİ - Tamamlandı</h4>
+                    <p>Müşteri: C. Demir | Tarih: 10.10.2025 | Durum: <span class="status tamamlandi">Tamamlandı</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="talep-detail-area" id="talep-detay">
+            
+            <div class="detail-header">
+                <h2 id="talep-baslik">#T1001: Mercedes S-Class (Yeni Talep)</h2>
+                <p id="talep-bilgileri" style="color:#777; font-size: 14px;">21 Ekim 2025, 14:00 | İstanbul Havalimanı | 3 Saat | Müşteri: A. Yılmaz</p>
+            </div>
+            
+            <div class="action-buttons">
+                <button class="btn-approve" onclick="handleAction('approve')">TEKLİFİ ONAYLA ve ÖDEME İÇİN YÖNLENDİR</button>
+                <button class="btn-reject" onclick="handleAction('reject')">TEKLİFİ REDDET</button>
+            </div>
+
+            <div class="chat-box" id="chat-box">
+                <div class="message-bubble user-message">
+                    <div class="message-content">Merhaba A. Yılmaz. Talep ettiğiniz S-Class, belirttiğiniz tarihte müsait durumdadır. Fiyat teklifini onaylıyor musunuz?</div>
+                </div>
+                <div class="message-bubble other-message">
+                    <div class="message-content">Teşekkürler. Başlangıç saati 13:30 olabilir mi?</div>
+                </div>
+                 <div class="message-bubble user-message">
+                    <div class="message-content">Elbette, 13:30 olarak güncellenmiştir. Onayınız beklenmektedir.</div>
+                </div>
+            </div>
+            
+            
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Platform üzerinden mesajınızı yazın (Telefon paylaşmak yasaktır!)">
+                <button onclick="sendMessage()">Gönder</button>
+            </div>
+
+        </div>
+        
+    </div>
+
+    <div class="footer">
+        &copy; 2025 LUXURIDER. Tüm Hakları Saklıdır. | <a href="#">Gizlilik Politikası</a> | <a href="#">Şartlar ve Koşullar</a>
+    </div>
+
+<script>
+    // Kullanıcıya talep aksiyonlarını gösteren simülasyon
+    function handleAction(action) {
+        const activeTalep = document.querySelector('.talep-item.active');
+        if (!activeTalep) {
+            alert('Lütfen listeden bir talep seçin.');
+            return;
+        }
+        const talepId = activeTalep.dataset.id;
+
+        if (action === 'approve') {
+            alert(`Talep #${talepId} onaylandı! Müşteri ödeme aşamasına yönlendiriliyor...`);
+            // Gerçek uygulamada DB'de talep durumu "ödeme bekleniyor" olarak güncellenir.
+        } else if (action === 'reject') {
+            alert(`Talep #${talepId} reddedildi. Müşteriye bilgi verildi.`);
+            // Gerçek uygulamada DB'de talep durumu "reddedildi" olarak güncellenir.
+        }
+    }
+
+    // Mesaj gönderme simülasyonu
+    function sendMessage() {
+        const input = document.getElementById('chat-input');
+        const chatBox = document.getElementById('chat-box');
+        const messageText = input.value.trim();
+
+        if (messageText === "") return;
+
+        // Yeni mesajı oluştur (Simülasyonda her zaman kullanıcı/sağlayıcı kendisi mesaj attı)
+        const messageBubble = document.createElement('div');
+        messageBubble.className = 'message-bubble user-message';
+        
+        const messageContent = document.createElement('div');
+        messageContent.className = 'message-content';
+        messageContent.textContent = messageText;
+        
+        messageBubble.appendChild(messageContent);
+        chatBox.appendChild(messageBubble);
+
+        // Chat kutusunu en alta kaydır
+        chatBox.scrollTop = chatBox.scrollHeight;
+        input.value = '';
+    }
+    
+    // Talep seçimi işlevi
+    function selectTalep(element) {
+        // Aktif olanı kaldır
+        document.querySelectorAll('.talep-item').forEach(i => i.classList.remove('active'));
+        // Tıklananı aktif yap
+        element.classList.add('active');
+        
+        // Gerçek uygulamada buraya AJAX ile talep detayları ve mesaj geçmişi yüklenir.
+        
+        // Başlığı güncelle
+        const talepId = element.dataset.id;
+        const baslik = element.querySelector('h4').textContent;
+        const bilgiler = element.querySelector('p').textContent;
+
+        document.getElementById('talep-baslik').textContent = `#T100${talepId}: ${baslik}`;
+        document.getElementById('talep-bilgileri').textContent = bilgiler.replace(' | Durum:', ' |'); // Durum bilgisini detay başlığından kaldır
+        
+        // Mesaj geçmişini temizle ve yeniden yükle (Simülasyon)
+        const chatBox = document.getElementById('chat-box');
+        chatBox.innerHTML = '';
+        
+        const welcomeMessage = document.createElement('div');
+        welcomeMessage.className = 'message-bubble other-message';
+        const welcomeContent = document.createElement('div');
+        welcomeContent.className = 'message-content';
+        welcomeContent.textContent = `Talep #${talepId} açıldı. Lütfen müşteri ile tüm iletişimi bu platform üzerinden yürütün.`;
+        welcomeMessage.appendChild(welcomeContent);
+        chatBox.appendChild(welcomeMessage);
+    }
+    
+    // İlk açılışta ilk talebi seç
+    document.addEventListener('DOMContentLoaded', () => {
+        const firstTalep = document.querySelector('.talep-item');
+        if (firstTalep) {
+            selectTalep(firstTalep);
+        }
+    });
+
+</script>
+
+</body>
+</html>

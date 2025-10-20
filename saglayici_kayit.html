@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Araç Sağlayıcı Kayıt - Luxurider.com</title>
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+
+    <div class="header">
+        <div class="logo" onclick="location.href='index.html'">LUXURIDER</div>
+        <nav class="nav">
+            <a href="arac_listesi.html">Filoyu Keşfet</a>
+            <a href="#">Nasıl Çalışır?</a>
+            <a href="#">İletişim</a>
+        </nav>
+        <div class="cta-buttons">
+            <button onclick="location.href='giris.html'">Üye Girişi</button>
+            <button class="active-button" onclick="location.href='saglayici_kayit.html'">Araç Sağlayıcı Ol</button>
+        </div>
+    </div>
+    
+    <div class="main-content-area">
+        <div class="form-box">
+            <h2>Araç Sağlayıcı Kayıt ve Yasal Doğrulama</h2>
+            <p style="text-align:center; color:var(--light-text); margin-bottom: 30px;">Lüks filomuza katılmak için temel bilgilerinizi girin ve yasal evraklarınızı yükleyerek onay sürecini başlatın.</p>
+            
+            <form id="saglayiciKayitFormu">
+                
+                <div class="form-header" style="color:var(--primary-color); font-size: 1.2em; border-left: 3px solid var(--secondary-color); padding-left: 10px; margin-bottom: 20px;">1. Hesap ve Firma Bilgileri</div>
+                
+                <div class="form-group">
+                    <label for="firma_adi">Firma Adı (Ticari Unvanınız)</label>
+                    <input type="text" id="firma_adi" required placeholder="Örn: ABC Turizm Taşımacılık Ltd. Şti.">
+                </div>
+                <div class="form-group">
+                    <label for="vergi_no">Vergi Kimlik Numarası (VKN)</label>
+                    <input type="text" id="vergi_no" required placeholder="VKN veya TC Kimlik (Şahıs firmaları için)">
+                </div>
+                <div class="form-group">
+                    <label for="ad_soyad">Yetkili Adı ve Soyadı</label>
+                    <input type="text" id="ad_soyad" required placeholder="Yetkili kişinin tam adı">
+                </div>
+                <div class="form-group">
+                    <label for="telefon">Telefon Numarası</label>
+                    <input type="text" id="telefon" required placeholder="5XX XXX XX XX">
+                </div>
+                <div class="form-group">
+                    <label for="email">E-posta Adresi</label>
+                    <input type="email" id="email" required placeholder="iletisim@firmaniz.com">
+                </div>
+                <div class="form-group">
+                    <label for="sifre">Şifre Oluştur</label>
+                    <input type="password" id="sifre" required>
+                </div>
+                
+                <div class="form-header" style="color:var(--primary-color); font-size: 1.2em; border-left: 3px solid var(--secondary-color); padding-left: 10px; margin-top: 40px; margin-bottom: 20px;">2. Zorunlu Yasal Belgeler (Turistik ve VIP Transfer)</div>
+                <p style="font-size:14px; color:var(--light-text); margin-bottom: 25px;">Platform kuralları gereği (D2, Sigortalar, Şoför Belgeleri) yüklenmelidir.</p>
+                
+                <div class="form-group">
+                    <label for="d2_belgesi">D2 Yetki Belgesi (Ulaştırma Bakanlığı)</label>
+                    <input type="file" id="d2_belgesi" accept=".pdf,.jpg,.jpeg,.png" required>
+                    <small style="color:#888;">Şehirler arası tarifesiz yolcu taşımacılığı belgesi.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="arac_ruhsat">Araç Ruhsatı ve Tescil Belgesi (Ticari Kayıt)</label>
+                    <input type="file" id="arac_ruhsat" accept=".pdf,.jpg,.jpeg,.png" required>
+                    <small style="color:#888;">Ticari taşımacılığa uygun araç kayıt belgesi.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="sigortalar">Zorunlu Mali Sorumluluk & Koltuk Ferdi Kaza Sigortası</label>
+                    <input type="file" id="sigortalar" accept=".pdf,.jpg,.jpeg,.png" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="sofor_belgeleri">Şoför Belgeleri (SRC2/SRC3 ve Psikoteknik)</label>
+                    <input type="file" id="sofor_belgeleri" accept=".pdf,.jpg,.jpeg,.png" required>
+                    <small style="color:#888;">Şoförlerin yeterlilik ve sağlık belgeleri.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="tursab_belgesi">TÜRSAB Acente Belgesi (Opsiyonel - Sadece tur organizasyonu için)</label>
+                    <input type="file" id="tursab_belgesi" accept=".pdf,.jpg,.jpeg,.png">
+                </div>
+
+                <p style="margin-top:40px; text-align:center; font-size:14px; color:var(--secondary-color);">
+                    Kayıt işlemini tamamlayıp belgelerinizi onaya gönderdiğinizde, ekibimiz yasal zorunlulukları kontrol edecektir. Onaydan sonra platforma araçlarınızı ekleyebilir ve **%5 komisyon** oranıyla kazanmaya başlayabilirsiniz.
+                </p>
+
+                <button type="submit" class="submit-button">Kayıt Ol ve Belgeleri Onaya Gönder</button>
+                
+                <p style="margin-top:20px; text-align:center; font-size:14px; color:#666;">Zaten hesabınız var mı? <a href="giris.html" style="color:var(--primary-color); text-decoration: none;">Giriş Yap</a></p>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="footer">
+        &copy; 2025 LUXURIDER. Tüm Hakları Saklıdır. | <a href="#">Gizlilik Politikası</a> | <a href="#">Şartlar ve Koşullar</a>
+    </div>
+
+</body>
+</html>
