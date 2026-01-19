@@ -1,0 +1,9 @@
+DirectoryIndex disabled
+RewriteEngine On
+
+# Node.js Portuna Yönlendir (Port 3000)
+# Eğer .env dosyasında PORT'u değiştirdiyseniz burayı da değiştirin
+RewriteRule ^$ http://127.0.0.1:3000/ [P,L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ http://127.0.0.1:3000/$1 [P,L]
